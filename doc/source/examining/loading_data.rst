@@ -2111,6 +2111,33 @@ For example, to add support for a longint field named
 ``my_custom_field``, one would add ``('my_custom_field', 'l')`` to ``assoc``.
 
 
+Particle ages and formation times
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For cosmological simulations that include star particles, RAMSES stores particle
+formation times as conformal times. To access these raw data in conformal units
+use the ``"conformal_formation_time"`` field. This will return the formation
+times of particles in the simulation in conformal units as a dimensionless
+array. To access the formation time in physical units, use the
+``"particle_formation_time"`` field. Finally, to access the ages of star
+particles in your simulation, use the ``"star_age"`` field. Note that this field
+is defined for all particle types but will only make sense for star particles.
+
+To avoid confusion, it may be convenient to define a particle filter to
+distinguish between particles present in the initial conditions and particles
+that formed dynamically during the simulation by filtering particles with
+``"conformal_formation_time"`` values equal to zero and not equal to zero.  An
+example particle filter definition for dynamically formed stars might look like
+this:
+
+.. code-block:: python
+
+    @yt.particle_filter(requires=["conformal_formation_time"],
+                        filtered_type='io')
+    def stars(pfilter, data):
+        filter = data[(pfilter.filtered_type, "conformal_formation_time"] != 0
+        return filter
+
 .. _loading-sph-data:
 
 SPH Particle Data

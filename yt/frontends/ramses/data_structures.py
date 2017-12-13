@@ -187,7 +187,7 @@ class RAMSESDomainFile(object):
             ("particle_velocity_x", "d"),
             ("particle_velocity_y", "d"),
             ("particle_velocity_z", "d"),
-            ("particle_age", "d"),
+            ("particle_formation_time", "d"),
             ("BH_real_accretion", "d"),
             ("BH_bondi_accretion", "d"),
             ("BH_eddington_accretion", "d"),
@@ -261,7 +261,7 @@ class RAMSESDomainFile(object):
                 ("particle_identifier", "i"),
                 ("particle_refinement_level", "I")]
             if hvals["nstar_tot"] > 0:
-                particle_fields += [("particle_age", "d"),
+                particle_fields += [("particle_formation_time", "d"),
                                     ("particle_metallicity", "d")]
             if self.ds._extra_particle_fields is not None:
                 particle_fields += self.ds._extra_particle_fields
@@ -495,6 +495,11 @@ class RAMSESIndex(OctreeIndex):
             dsl.update(set(domain.sink_field_offsets.keys()))
 
         self.particle_field_list = list(dsl)
+        cosmo = self.ds.cosmological_simulation
+        for f in self.particle_field_list[:]:
+            if f[1] == 'particle_formation_time' and cosmo:
+                self.particle_field_list.append(
+                    (f[0], 'conformal_formation_time'))
         self.field_list = [("ramses", f) for f in self.fluid_field_list] \
                         + self.particle_field_list
 

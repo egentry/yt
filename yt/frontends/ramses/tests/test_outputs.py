@@ -27,6 +27,7 @@ from yt.utilities.answer_testing.framework import \
 from yt.frontends.ramses.api import RAMSESDataset
 import os
 import yt
+import numpy as np
 
 _fields = ("temperature", "density", "velocity_magnitude",
            ("deposit", "all_density"), ("deposit", "all_count"))
@@ -109,6 +110,14 @@ def test_unit_cosmo():
 
         expected_time = 3.756241729312462e+17 # in seconds
         assert_equal(ds.current_time.in_units('s').value, expected_time)
+
+    assert ('io', 'particle_formation_time') in ds.field_list
+    assert ('io', 'conformal_formation_time') in ds.field_list
+    assert ('io', 'particle_metallicity') in ds.field_list
+
+    ad = ds.all_data()
+    whstars = ad['conformal_formation_time'] != 0
+    assert np.all(ad['star_age'][whstars] > 0)
 
 
 ramsesExtraFieldsSmall = 'ramses_extra_fields_small/output_00001'
