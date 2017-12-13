@@ -186,7 +186,7 @@ def test_ramses_sink():
                        "BH_efficiency", "BH_esave",
                        "BH_real_accretion", "BH_spin", "BH_spin_x",
                        "BH_spin_y", "BH_spin_z", "gas_spin_x",
-                       "gas_spin_y", "gas_spin_z", "particle_age",
+                       "gas_spin_y", "gas_spin_z", "particle_formation_time",
                        "particle_identifier", "particle_mass",
                        "particle_position_x", "particle_position_y",
                        "particle_position_z", "particle_prop_0_0",
